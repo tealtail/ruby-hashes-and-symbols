@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Title</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="slides.css">
+</head>
+<body>
+  <textarea id="source">
+class: center, middle
+
+# Symbols & Hashes
+
+<big>Alicia Lauerman</big>
+### [@tealtail](http://twitter.com/tealtail)</small>
+
+---
+
+# Agenda
+
+In the following slides, we will cover the following topics:
+
+* I DON'T KNOW!
+
+---
+
+### Ruby Collection
+## Hashes
+
+Similar to an array, but in a hash we can refer to a member's index by a keyword instead of a number. Each member is a pair:
+
+* Key: index address of the hash member
+
+* Value: variable contained by the member, and located by key name. Can be objects of any type.
+
+A hash may also be referred to as a `dictionary`, `associative array`, or `map`.
+
+???
+Hashes are similar to arrays in that they are both indexed collections of object references. However, while you index arrays with integers, you can index a hash with objects of any types: strings, regular expressions, and so on. When you store a value in a hash, you actually supply two objects * the index (normally called the key) and the value. You can later retrieve the value by indexing the hash with the same key. The values in a hash can be objects of any type.
+
+---
+## Creating a Hash
+
+.left-column[
+### - Hash.new
+]
+
+.right-column[
+Calling Hash.new will initialize a new, empty hash object
+```
+> heroes = Hash.new
+# => {}
+```
+]
+
+???
+So here I'm demonstrating one way to create a hash. I call Hash.new
+to instantiate a new instance of the Hash class, and afterward, the response I get back is these two little curly braces here, which is ruby's way of letting me know that it's a hash.
+
+In fact, I could also use this, these two curly braces to accomplish the exact same thing
+---
+
+## Creating a Hash
+
+.left-column[
+### - Hash.new
+### - hash = {}
+]
+
+.right-column[
+You can also use {} to accomplish the same thing. Nifty!
+```
+> heroes = {}
+# => {}
+```
+]
+
+---
+
+## Creating a Hash
+
+.left-column[
+### - Hash.new
+### - hash = {}
+### - Add the things!
+]
+
+.right-column[
+Use the `[]` operator (brackets) to add keys and assign their values, as well as modify them
+
+```
+> heroes["Batman"] = "Bruce Wayne"
+> heroes["Superman"] = "Clark Kennt" # oops!
+> heroes["Superman"] = "Clark Kent" # value is updated
+> heroes.size
+# => 2
+> puts heroes
+# => {"Batman" => "Bruce Wayne", "Superman" => "Clark Kent"}
+```
+]
+
+???
+Once we have a hash, if we want to add items to it we can do that by using the brackets to assign values to a new key, here we're adding the new key batman, with his secret identity Bruce Wayne, as well as the superman key that will be associated with his secret identity, Clark Kent. I misspelled it the first time but it's easy enough to change that.
+
+---
+## Creating a Hash
+
+.left-column[
+### - Hash.new
+### - hash = {}
+### - Add the things!
+### - Literal Syntax
+]
+
+.right-column[
+A Hash Literal:
+
+* list of key => value pairs
+* commas separate each pair
+* each key has a `=>` (a hash rocket) pointing to its value.
+* pairs are wrapped between two curly braces (aka curly brackets)
+* preferred way of creating ruby hashes.
+
+
+```
+> heroes = { "Batman" => "Bruce Wayne", "Superman" => "Clark Kent" }
+> heroes.size
+# => 2
+> puts heroes
+# => {"Batman" => "Bruce Wayne", "Superman" => "Clark Kent"}
+```
+]
+???
+We could also choose to create the same heroes hash from the previous slide, using a hash literal to both instantiate the hash and define it's members in one go.
+---
+
+## Accessing objects in a hash
+
+Since each key in a hash must be unique, retrieving a stored value is as simple as referencing its key inside of brackets.
+
+```
+> heroes["Batman"]
+# => "Bruce Wayne"
+> heroes["Superman"]
+# => "Clark Kent"
+```
+
+---
+
+## Accessing objects in a hash
+
+But what if we try to access a key that doesn't exist?
+```
+> heroes.keys
+# => ["Batman", "Superman"]
+> heroes["Supermann"]
+# => nil
+```
+Oh...
+
+---
+
+## Accessing objects in a hash
+### A better way, using the fetch method
+
+Use `fetch(key)` to get the stored values
+
+```
+> heroes.fetch("Batman")
+# => "Bruce Wayne"
+> heroes.fetch("Supermann")
+# => KeyError: key not found: "Supermann"
+```
+
+The `fetch` method will read the value of a given key, But if the key isn't found, an exception is raised.
+
+---
+
+## Iterating through hashes
+
+The `each` method
+
+```
+>> heroes = { "Batman" => "Bruce Wayne", "Superman" => "Clark Kent", "Green Lantern" => "Hal Jordan", "The Hulk" => "Bruce Banner" }
+>> heroes.each do |hero, alterego|
+>>   puts "#{alterego} is #{hero}'s secret identity!"
+>> end
+```
+output:
+
+```
+Bruce Wayne is secretly Batman!
+Clark Kent is secretly Superman!
+Hal Jordan is secretly Green Lantern!
+Bruce Banner is secretly The Hulk!
+```
+
+---
+
+class: center, middle
+
+# Prefer symbols as hash keys, over strings
+
+---
+
+## Strings are MUTABLE
+
+The value of a string can be changed at anytime.
+
+```ruby
+> greeting = "HELLO"
+> greeting[1] = "A"
+> puts greeting
+# => "HALLO"
+
+> greeting.downcase!
+> puts greeting
+# => "hallo"
+```
+
+???
+Because Strings are mutable, meaning they can be changed anytime, the Ruby interpreter never knows what that String may hold in terms of data. As such, every String needs to have its own place in memory.
+
+---
+
+## How strings are stored
+
+Even if they happen to contain the same value, each and every string will be stored as a new object in memory.
+
+```ruby
+> puts "hello".object_id # => 70319785054740
+> puts "hello".object_id # => 70319784980180
+> puts "hello".object_id # => 70319785054740
+> puts "hello".object_id # => 70319784575320
+> puts "hello".object_id # => 70319784540680
+```
+
+We are creating a new object, storing and ultimately destroying it when reusing the same object would be much more efficient.
+
+???
+For example, if you have a string "hello" multiple times mentioned in your code, Ruby needs to store all of these as separate String objects, because they might change later on. We can see this here where I'm creating some Strings and printing their object ids.
+
+Behind the scenes, there is some heavy waste going down.
+
+1. First, a new String object is instantiated with the value of hello.
+
+2. The Ruby interpreter needs to look at the heap (your computers memory), find a place to put the new string and keep track of it via its object id.
+
+3. The String is passed to the puts method, and output to the screen.
+
+4. The Ruby interpreter sees that the String will not be used again as it is not assigned to a variable, and marks it for destruction.
+
+5. Back to step one four more times.
+
+We are creating a new object, storing and ultimately destroying it when reusing the same object would be much more efficient. So Lets do the same thing but with Symbols instead.
+
+---
+
+## Symbols
+### look like a variable names, prefixed with a colon
+
+* are unique
+* are immutable
+* are NOT garbage collected
+
+```
+> puts :hello.object_id # => 495948
+> puts :hello.object_id # => 495948
+> puts :hello.object_id # => 495948
+> puts :hello.object_id # => 495948
+```
+
+```
+> :hello == :hello
+# => true
+> :hello.equal? :hello
+# => true
+> :hello.equal? "hello".to_sym
+# => true
+```
+
+???
+This time, we see that every Symbol shares the same object id, and as such the same space on the heap. Ruby will not mark Symbols for destruction, allowing you to reuse them again and again.
+---
+
+class: center, middle
+
+# "Strings are about a sequence of characters. Symbols are about naming and identifying things."
+ [Symbols Are Not Immutable Strings](http://onestepback.org/index.cgi/2005/12/27)
+
+???
+Whenever you would otherwise use a quoted string as a hash key, use a symbol instead.
+
+---
+
+## Using Symbols as Hash Keys
+
+So let's make a new hash, this time using symbols in our hash literal
+
+```
+> quiz_scores = { :Alicia => 85, :Brad => 60, :Allen => 74 }
+#=> {:Alicia=>85, :Brad=>60, :Allen=>74}
+```
+
+Ruby 1.9 introduced a new variation of the hash literal for hashes that use symbols as hash keys
+
+```
+> quiz_scores = {Alicia: 85, Brad: 60, Allen: 74}
+# => {:Alicia=>85, :Brad=>60, :Allen=>74}
+```
+???
+Using symbols not only saves time when doing comparisons, but also saves memory, because they are only stored once.
+
+So let's make a new hash, this time using symbols where we might have used a string earlier.
+
+---
+
+  </textarea>
+  <script src="remark/remark.min.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+    var slideshow = remark.create(
+    {
+      highlightLanguage: "ruby",
+      highlightStyle: "rainbow",
+      ratio: "16:9"
+    });
+  </script>
+</body>
+</html>
