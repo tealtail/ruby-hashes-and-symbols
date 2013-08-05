@@ -114,7 +114,7 @@ Once we have a hash, if we want to add items to it we can do that by using the b
 ### - Hash.new
 ### - hash = {}
 ### - Add the things!
-### - Literal Syntax
+### - Literal
 ]
 
 .right-column[
@@ -138,25 +138,12 @@ puts heroes
 We could also choose to create hashes using something called a hash literal. We wrap a comma seperated list of key/value pairs inside of curly braces. Each key points to its value with a hash rocket. This lets us both instantiate the hash and define it's members in one go.
 
 But wait, something else is different here - Take a look at the keys in this hash. I'm using symbols now instead of strings. I can actually take advantage of a newer variation of hash literal that was introduced in ruby 1.9 because of this.
-
----
-
-## Creating a new Hash
-
-.left-column[
-### - Hash.new
-### - hash = {}
-### - Add the things!
-### - Literal Syntax
-]
+--
 
 .right-column[
 Ruby 1.9 Hash Literal
 ```
 heroes = { Batman: "Bruce Wayne", Superman: "Clark Kent"}
-
-puts heroes
-# => {:Batman=>"Bruce Wayne", :Superman=>"Clark Kent"}
 ```
 ]
 
@@ -378,7 +365,7 @@ end
 You can use the `each` method to iterate over all the elements in a Hash. However unlike `Array#each`, when you iterate over a Hash using `each`, it passes two values to the block: the key and the value of each element.
 --
 
-produces
+output
 
 ```
 Ramen - $3
@@ -409,6 +396,84 @@ puts restaurant_menu
 => { :Ramen => 3.3, :Burrito => 4.4, :Coffee => 2.2}
 ```
 ---
+## Options Hash
+
+```
+class Phone
+  def ring!(volume, ringtone, vibrate, max_rings)
+  # ...
+  end
+end
+```
+```
+phone = Phone.new
+if caller.is_my_friend?
+  phone.ring!(6, "8 bit intruder", false, 4)
+elsif caller.is_my_boss?
+  phone.ring!(11, "something obnoxious", true, 8)
+end
+```
+???
+So say I want to write an application that determines the way my phone will react to an incoming call, depending on who is calling. The parameter list is pretty long here and the call to it is hard to read, and in the case that we don't include all of the parameters, the call won't succeed
+---
+## Options Hash
+
+```
+class Phone
+  def ring!(options = {})
+    @volume = options[:volume]
+    @ringtone = options[:ringtone]
+    @vibrate = options[:vibrate]
+    @max_rings = options[:max_rings]
+  end
+end
+```
+???
+It's a common pattern in ruby and especially rails to use an options hash for things like this. The options hash will replace all of those parameters, and then inside of the method we'll just read all of the values from the hash that was passed in.
+--
+```
+phone.ring!(
+  :volume => 6,
+  :ringtone => "8 bit intruder",
+  :vibrate => false,
+  :max_rings => 4
+)
+```
+???
+The cool part about this is when we go to call that function,we specify all those different keys, which shows meaning, and we know all the different parameters that we're passing in.
+---
+## Options Hash
+
+```
+class Phone
+  def ring!(options = {})
+    @volume = options[:volume]
+    @ringtone = options[:ringtone]
+    @vibrate = options[:vibrate]
+    @max_rings = options[:max_rings]
+  end
+end
+```
+Using Ruby 1.9 Hash Syntax
+```
+phone.ring!(
+  volume: 6,
+  ringtone: "8 bit intruder",
+  vibrate: false,
+  max_rings: 4
+)
+```
+???
+We could also write this using the 1.9 Hash syntax. The order of keys isn't important anymore and we can rearrange them if we like.
+--
+
+Keys are optional
+```
+phone.ring!(volume: 6)
+```
+???
+We don't need to send in all the parameters. In fact we could omit the options hash completely. The best case would be specifying some defaults for the options, which I didn't show, but it's useful to be able to send in just the parameters that we care about.
+---
 class: center, middle
 
 ## Other useful methods
@@ -437,7 +502,7 @@ Returns a new hash containing the merged contents of two hashes. Without specify
 ---
 class: center, middle
 
-## THANKS!
+# END!
 ### Any Questions?
 
   </textarea>

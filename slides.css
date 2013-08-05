@@ -49,15 +49,18 @@ a {
 .pushdown {
   margin-top: 12em;
 }
+
 .pushdown-sm{
   margin-top: 1em;
 }
+
 .left-column {
   color: #777;
   width: 20%;
   height: 92%;
   float: left;
 }
+
 .left-column h2:last-of-type, .left-column h3:last-child {
   color: #000;
 }
@@ -96,6 +99,3 @@ a {
   font-weight: 600;
   color: #2B363C;
 }
-
-
-
