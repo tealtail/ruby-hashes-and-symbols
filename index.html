@@ -9,34 +9,37 @@
   <textarea id="source">
 class: center, middle
 
-# Symbols & Hashes
+# Hashes (and Symbols)
 
 <big>Alicia Lauerman</big>
 ### [@tealtail](http://twitter.com/tealtail)</small>
 
 ---
+.left-column.hashes[
+# {}
+]
 
-# Agenda
+.right-column-sm.pushdown-sm.nudge-right[
+## Collection of key-value pairs
 
-In the following slides, we will cover the following topics:
-
-* I DON'T KNOW!
-
+## Similar to an array, except indexing is done via unique keys.
+]
 ---
 
-### Ruby Collection
 ## Hashes
 
-Similar to an array, but in a hash we can refer to a member's index by a keyword instead of a number. Each member is a pair:
+Each member is a pair:
 
 * Key: index address of the hash member
 
 * Value: variable contained by the member, and located by key name. Can be objects of any type.
 
-A hash may also be referred to as a `dictionary`, `associative array`, or `map`.
+Note: A hash may also be referred to as a `dictionary`, `associative array`, or `map`.
 
 ???
-Hashes are similar to arrays in that they are both indexed collections of object references. However, while you index arrays with integers, you can index a hash with objects of any types: strings, regular expressions, and so on. When you store a value in a hash, you actually supply two objects * the index (normally called the key) and the value. You can later retrieve the value by indexing the hash with the same key. The values in a hash can be objects of any type.
+Hashes are similar to arrays in that they are both indexed collections of object references. However, while you index arrays with integers, you can index a hash with a unique keyword.
+
+When you store a value in a hash, you actually supply two objects, the index (normally called the key) and the value. You can later retrieve the value by indexing the hash with the same key. The values in a hash can be objects of any type.
 
 ---
 ## Creating a Hash
@@ -48,7 +51,7 @@ Hashes are similar to arrays in that they are both indexed collections of object
 .right-column[
 Calling Hash.new will initialize a new, empty hash object
 ```
->> heroes = Hash.new
+heroes = Hash.new
 # => {}
 ```
 ]
@@ -70,7 +73,7 @@ In fact, I could also use this, these two curly braces to accomplish the exact s
 .right-column[
 You can also use `{}` to accomplish the same thing. Nifty!
 ```
->> heroes = {}
+heroes = {}
 # => {}
 ```
 ]
@@ -89,12 +92,13 @@ You can also use `{}` to accomplish the same thing. Nifty!
 Use the `[]` operator (brackets) to add keys and assign their values, as well as modify them
 
 ```
->> heroes["Batman"] = "Bruce Wayne"
->> heroes["Superman"] = "Clark Kennt" # oops!
->> heroes["Superman"] = "Clark Kent" # value is updated
->> heroes.size
-# => 2
->> puts heroes
+heroes = {}
+heroes["Batman"] = "Bruce Wayne"
+heroes["Superman"] = "Clark Kennt" # oops!
+heroes["Superman"] = "Clark Kent" # value is updated
+heroes.size # => 2
+
+puts heroes
 # => {"Batman" =>"Bruce Wayne", "Superman" =>"Clark Kent"}
 ```
 ]
@@ -104,7 +108,7 @@ Once we have a hash, if we want to add items to it we can do that by using the b
 
 ---
 
-## Creating a Hash
+## Creating a new Hash
 
 .left-column[
 ### - Hash.new
@@ -123,8 +127,9 @@ Hash Literal
 
 
 ```
->> heroes = { :Batman => "Bruce Wayne", :Superman => "Clark Kent" }
->> puts heroes
+heroes = { :Batman => "Bruce Wayne", :Superman => "Clark Kent" }
+
+puts heroes
 # => {:Batman=>"Bruce Wayne", :Superman=>"Clark Kent"}
 ```
 ]
@@ -134,13 +139,23 @@ We could also choose to create hashes using something called a hash literal. We 
 
 But wait, something else is different here - Take a look at the keys in this hash. I'm using symbols now instead of strings. I can actually take advantage of a newer variation of hash literal that was introduced in ruby 1.9 because of this.
 
---
+---
+
+## Creating a new Hash
+
+.left-column[
+### - Hash.new
+### - hash = {}
+### - Add the things!
+### - Literal Syntax
+]
 
 .right-column[
 Ruby 1.9 Hash Literal
 ```
->> heroes = { Batman: "Bruce Wayne", Superman: "Clark Kent"}
->> puts heroes
+heroes = { Batman: "Bruce Wayne", Superman: "Clark Kent"}
+
+puts heroes
 # => {:Batman=>"Bruce Wayne", :Superman=>"Clark Kent"}
 ```
 ]
@@ -148,7 +163,7 @@ Ruby 1.9 Hash Literal
 ???
 A symbol is a special kind of object in ruby, whose value is itself. You'll know it's a symbol when it has a colon stuck to the front of it.
 
-So, when the keys in your hash are symbols, and you're using ruby 1.9 or later, you can opt to create your hashes this way, doing away wih the hash rockets we saw before and just pinning the colon to the end of a symbol instead of at the beginning. It's not a requirement, but it does seem more concise, I think. Maybe a bit cleaner. It's just a matter of taste, but you'll still need to use the hash rockets when your hash keys are some other arbitrary type.
+So, when the keys in your hash are symbols, and you're using ruby 1.9 or later, you can opt to create your hashes this way, doing away wih the hash rockets we saw before and just pinning the colon to the end of a symbol instead of at the beginning. It does seem more concise, I think. Maybe a bit cleaner, but you'll still need to use the hash rocket syntax when your hash keys are some other arbitrary type.
 
 ---
 
@@ -163,26 +178,22 @@ class: center, middle
 
 --
 .octocat[![octocat](images/bear-cavalry.jpg)]
-## .right[  for example, `:octocat` ]
+### .right[  for example, `:octocat` ]
 
 --
 .left[
 A symbol is:
 
 * an object with a name
-* closely related to String (but can't do many "stringy" type things)
+* closely related to String (can do a few "stringy" type things)
 * easily converted to string with `to_s`
 ]
 
 ```
->> :octocat.to_s
-# => "octocat"
->> "octocat".to_sym
-# => :octocat
->> :octocat.methods.size
-# => 86
->> "octocat".methods.size
-# => 171
+:octocat.to_s           # => "octocat"
+"octocat".to_sym        # => :octocat
+:octocat.methods.size   # => 86
+"octocat".methods.size  # => 171
 ```
 
 ???
@@ -199,13 +210,15 @@ So, a symbol is an object that can be uniquely identified by it's name. It's val
 The value of a string can be changed at anytime.
 
 ```ruby
->> greeting = "HELLO"
->> greeting[1] = "A"
->> puts greeting
+greeting = "HELLO"
+greeting[1] = "A"
+
+puts greeting
 # => "HALLO"
 
->> greeting.downcase!
->> puts greeting
+greeting.downcase!
+
+puts greeting
 # => "hallo"
 ```
 ]
@@ -225,11 +238,11 @@ Because Strings are mutable, meaning they can be changed anytime, the Ruby inter
 Even if they happen to contain the same value as any string before it, each and every string will be stored as a new object in memory.
 
 ```ruby
->> puts "hello".object_id # => 70319785054740
->> puts "hello".object_id # => 70319784980180
->> puts "hello".object_id # => 70319785054740
->> puts "hello".object_id # => 70319784575320
->> puts "hello".object_id # => 70319784540680
+puts "hello".object_id # => 70319785054740
+puts "hello".object_id # => 70319784980180
+puts "hello".object_id # => 70319785054740
+puts "hello".object_id # => 70319784575320
+puts "hello".object_id # => 70319784540680
 ```
 
 We are creating a new object (five times), storing and ultimately destroying it when reusing the same object would be much more efficient.
@@ -260,17 +273,17 @@ We are creating a new object, storing and ultimately destroying it when reusing 
 * are immutable
 * are NOT garbage collected
 
-Same symbol, same object_id. A Ruby symbol cannot be changed at runtime. Ruby symbols are often used as hash keys, because we do not need full capabilities of a string objects for a key.
+Same symbol, same object_id.
 
 ```
->> puts :hello.object_id # => 495948
->> puts :hello.object_id # => 495948
->> puts :hello.object_id # => 495948
->> puts :hello.object_id # => 495948
+puts :hello.object_id # => 495948
+puts :hello.object_id # => 495948
+puts :hello.object_id # => 495948
+puts :hello.object_id # => 495948
 
->> :hello == :hello # => true
->> :hello.equal? :hello # => true
->> :hello.equal? "hello".to_sym # => true
+:hello == :hello # => true
+:hello.equal? :hello # => true
+:hello.equal? "hello".to_sym # => true
 ```
 
 ???
@@ -288,7 +301,7 @@ Whenever you would otherwise use a quoted string as a hash key, use a symbol ins
 
 Using symbols not only saves time when doing comparisons, but also saves memory, because they are only stored once.
 
-So let's make a new hash, this time using symbols where we might have used a string earlier.
+Ruby symbols are often used as hash keys, because we do not need full capabilities of a string objects for a key.
 
 ---
 
@@ -297,33 +310,33 @@ So let's make a new hash, this time using symbols where we might have used a str
 Every hash object has the methods `keys` and `values` available to it. The `keys` method returns an array of all the keys in the Hash. Similarly, `values` returns an array of just the values.
 
 ```
->> heroes.keys
+puts heroes.keys
 # => ["Batman", "Superman"]
->> heroes.values
+
+puts heroes.values
 # => ["Bruce Wayne", "Clark Kent"]
 ```
 
 --
 
-Since each key in a hash must be unique, retrieving a stored value is as simple as referencing its key inside of `[]`.
+Since each key in a hash must be unique, retrieving a stored value is as simple as referencing its key inside of brackets.
 ```
->> heroes["Batman"]
-# => "Bruce Wayne"
->> heroes["Superman"]
+heroes["Batman"]
+# => "Bruce Wayne
+
+heroes["Superman"]
 # => "Clark Kent"
 ```
 ---
 ## Accessing objects in a hash
 
 ### But what if we try to access a key that doesn't exist?
-
-
+We'll get back `nil`, since that's the default value
 
 ```
->> heroes.keys
-# => ["Batman", "Superman"]
->> heroes["Supermann"]
-# => nil
+heroes.keys # => ["Batman", "Superman"]
+
+heroes["Supermann"] # => nil
 ```
 
 ???
@@ -336,34 +349,96 @@ We get back `nil` because that's currently the default for any value in our hash
 Use `fetch(key)` to retrieve stored values
 
 ```
->> heroes.fetch("Batman")
+heroes.fetch("Batman")
 # => "Bruce Wayne"
->> heroes.fetch("Supermann")
-# => KeyError: key not found: "Supermann"
+
+heroes.fetch("Supermann")
+KeyError: key not found: "Supermann"
 ```
 
 The `fetch` method will read the value of a given key, But if the key isn't found, an exception is raised.
 
 ---
+# .each
 
-## Iterating over hashes
+## Iterate over all elements, doing *something* once per each key-value pair
 
+---
+
+## using each
+
+```
+restaurant_menu = { Ramen: 3, Burrito: 4, Coffee: 2 }
+
+restaurant_menu.each do | item, price |
+  puts "#{item} - $#{price}"
+end
+```
+???
 You can use the `each` method to iterate over all the elements in a Hash. However unlike `Array#each`, when you iterate over a Hash using `each`, it passes two values to the block: the key and the value of each element.
+--
 
-```
->> restaurant_menu = { Ramen: 3, Burrito: 4, Coffee: 2 }
->> restaurant_menu.each do | item, price |
->*   puts "#{item} - $#{price}"
->> end
-```
-produces:
+produces
 
 ```
 Ramen - $3
 Burrito - $4
 Coffee - $2
 ```
+---
 
+## using each
+
+This time we'll modify the hash, increasing the value of each item on the menu.
+
+```
+restaurant_menu = { Ramen: 3, Burrito: 4, Coffee: 2 }
+
+restaurant_menu.each do | item, price |
+  restaurant_menu[item] = price + (price * 0.1)
+end
+```
+
+???
+Due to rising costs of ingredients, the restaurant needs to increase all prices by 10%. In the last example we printed the keys and values .
+--
+
+
+```
+puts restaurant_menu
+=> { :Ramen => 3.3, :Burrito => 4.4, :Coffee => 2.2}
+```
+---
+class: center, middle
+
+## Other useful methods
+---
+
+## has_key? / has_value?
+
+### Checks whether a given key / value exists in hash
+--
+
+## reject / delete_if?
+
+### removes pairs that match a condition from a hash
+
+???
+The reject and the delete_if methods can remove multiple pairs from a hash. The methods delete pairs that return true for the given condition. There is an important distinction between the two methods. The reject method works on a copy of a hash while the delete_if works on the original hash.
+--
+
+## merge
+
+### returns one, combined hash from two hashes
+
+???
+Called like: hash.merge(other_hash)
+Returns a new hash containing the merged contents of two hashes. Without specifying a block for the merge, the values for any duplicate keys will be from the other hash
+---
+class: center, middle
+
+## THANKS!
+### Any Questions?
 
   </textarea>
   <script src="remark/remark.min.js" type="text/javascript">
@@ -373,7 +448,6 @@ Coffee - $2
     {
       highlightLanguage: "ruby",
       highlightStyle: "tomorrow-night-eighties",
-      ratio: "16:9"
     });
   </script>
 </body>
